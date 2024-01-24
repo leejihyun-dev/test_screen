@@ -126,11 +126,15 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
       //스위치 버튼에 따라 타입 다르게 보임
       case VirtualKeyboardType.Numeric: // 숫자만
         return _keyLayout(numericLayout);
-      case VirtualKeyboardType.Alphanumeric: //숫자+자판
-        return _keyLayout(krLayout);
+      // case VirtualKeyboardType.Alphanumeric: //숫자+자판
+      //   return _keyLayout(krLayout);
       // return _keyLayout(usLayout);
       case VirtualKeyboardType.Symbolic: // 아마도 특수문자?
         return _keyLayout(symbolLayout);
+      case VirtualKeyboardType.local: //언어변경 추가해봄
+        return _keyLayout(usLayout);
+      case VirtualKeyboardType.Basic: //기본 숫자+자판
+        return _keyLayout(krLayout);
       default:
         throw new Error();
     }
@@ -224,6 +228,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
   Widget _keyboardDefaultKey(VirtualKeyboardKey key) {
     //자판
+    print('_keyBoard ${key.capsText}');
     return Material(
         color: Colors.grey,
         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -275,9 +280,6 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
               baseOffset: cursorPosition!.baseOffset - 1,
               extentOffset: cursorPosition!.extentOffset - 1);
           break;
-        // case VirtualKeyboardKeyAction.Return:
-        //   textController.text += '\n';
-        //   break;
         case VirtualKeyboardKeyAction.Space: //공백추가
           textController.text += key.text!;
           break;
@@ -285,7 +287,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
           break;
         case VirtualKeyboardKeyAction.Alpha: //특수기호
           setState(() {
-            type = VirtualKeyboardType.Alphanumeric;
+            type = VirtualKeyboardType.Basic;
           });
           break;
         case VirtualKeyboardKeyAction.Symbols: //특수기호
@@ -294,6 +296,11 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
           });
           break;
         case VirtualKeyboardKeyAction.local: //언어변경
+          setState(() {
+            type = (type == VirtualKeyboardType.local) //영어로 설정됐다면 다시 기본으로
+                ? VirtualKeyboardType.Basic
+                : VirtualKeyboardType.local; //한글이라면 영어로 변경
+          });
           break;
         default:
       }
@@ -344,12 +351,6 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
       case VirtualKeyboardKeyAction.local:
         actionKey = Icon(Icons.g_translate_sharp, color: textColor);
         break;
-      // case VirtualKeyboardKeyAction.Return:
-      //   actionKey = Icon(
-      //     Icons.keyboard_return,
-      //     color: textColor,
-      //   );
-      //   break;
       case VirtualKeyboardKeyAction.Symbols:
         actionKey = Icon(Icons.emoji_symbols, color: textColor);
         break;

@@ -68,7 +68,7 @@ class _KeyboardServiceTestState extends State<KeyboardServiceTest> {
                   height: 400,
                   type: isNumericMode
                       ? VirtualKeyboardType.Numeric
-                      : VirtualKeyboardType.Alphanumeric,
+                      : VirtualKeyboardType.Basic,
                   textController: _controllerText),
             )
           ],

@@ -33,7 +33,7 @@ class TextUsKey extends VirtualKeyboardKey {
 }
 
 class TextKrKey extends VirtualKeyboardKey {
-  //한글은 유음처리 어떻게 하나
+  //한글은 쌍자음처리 어떻게 하나
   TextKrKey(String text, {String? capsText})
       : super(
             text: text,
@@ -43,9 +43,18 @@ class TextKrKey extends VirtualKeyboardKey {
 }
 
 String test(String data, String? capsText) {
-  print(data);
   if (capsText == null) {
-    return data.toUpperCase();
+    String testt = switch (data) {
+      'ㅂ' => 'ㅃ',
+      'ㅈ' => 'ㅉ',
+      'ㄷ' => 'ㄸ',
+      'ㄱ' => 'ㄲ',
+      'ㅅ' => 'ㅆ',
+      'ㅐ' => 'ㅒ',
+      'ㅔ' => 'ㅖ',
+      _ => data,
+    };
+    return testt;
   } else {
     return capsText;
   }
@@ -61,10 +70,6 @@ class ActionKey extends VirtualKeyboardKey {
         super.capsText = ' ';
         super.willExpand = true;
         break;
-      // case VirtualKeyboardKeyAction.Return:
-      //   super.text = '\n';
-      //   super.capsText = '\n';
-      //   break;
       case VirtualKeyboardKeyAction.Backspace:
         super.willExpand = true;
         break;
