@@ -69,6 +69,10 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
   // True if shift is enabled.
   bool isShiftEnabled = false;
+  HangulInput input = HangulInput(''); //한글 자음모음 합치기 위해 사용
+
+  VirtualKeyboardType _selectedType =
+      VirtualKeyboardType.Basic; //특수기호 클릭했을 때 이전에 선택한 언어로 돌아가기위해 사용함
 
   @override
   void didUpdateWidget(VirtualKeyboard oldWidget) {
@@ -109,6 +113,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
     alwaysCaps = widget.alwaysCaps;
 
     textController.addListener(textControllerEvent);
+    input = HangulInput('');
 
     // Init the Text Style for keys.
     textStyle = TextStyle(
@@ -142,7 +147,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
   Widget _keyLayout(List<List<VirtualKeyboardKey>> layout) {
     //키보드 ui
-    // arbritrary
+    // basic
     keySpacing = 8.0;
     double totalSpacing = keySpacing * (layout.length + 1);
     keyHeight = (height - totalSpacing) / layout.length;
@@ -228,7 +233,6 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
   Widget _keyboardDefaultKey(VirtualKeyboardKey key) {
     //자판
-    print('_keyBoard ${key.capsText}');
     return Material(
         color: Colors.grey,
         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -254,40 +258,31 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
   void _onKeyPress(VirtualKeyboardKey key) {
     //자음,모음(String)을 눌렀는지 다른 버튼(Action)을 눌렀는지
-    print(key.keyType);
-    if (key.keyType == VirtualKeyboardKeyType.String) {
-      String text = textController.text;
-      if (cursorPosition == null) textControllerEvent();
-      textController.text = cursorPosition!.textBefore(text) +
-          (isShiftEnabled ? key.capsText! : key.text!) +
-          cursorPosition!.textAfter(text);
 
-      cursorPosition = TextSelection(
-          baseOffset: cursorPosition!.baseOffset + 1,
-          extentOffset: cursorPosition!.extentOffset + 1);
+    if (key.keyType == VirtualKeyboardKeyType.String) {
+      input.pushCharacter(isShiftEnabled ? key.capsText! : key.text!);
+      if (textController.text.endsWith('_')) {
+        //TODO. 수정필요~~
+        textController.text += input.text;
+      } else {
+        textController.text = input.text;
+      }
     } else if (key.keyType == VirtualKeyboardKeyType.Action) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.Backspace: //지움 버튼
-          if (textController.text.length == 0) return;
-          if (cursorPosition!.start == 0) return;
-          String text = textController.text;
-          if (cursorPosition == null) textControllerEvent();
-          textController.text = cursorPosition!.start == text.length
-              ? text.substring(0, text.length - 1)
-              : text.substring(0, cursorPosition!.start - 1) +
-                  text.substring(cursorPosition!.start);
-          cursorPosition = TextSelection(
-              baseOffset: cursorPosition!.baseOffset - 1,
-              extentOffset: cursorPosition!.extentOffset - 1);
+          input.backspaceChar();
+          textController.text = input.text;
           break;
         case VirtualKeyboardKeyAction.Space: //공백추가
+          input = HangulInput('');
           textController.text += key.text!;
           break;
         case VirtualKeyboardKeyAction.Shift: //대문자변경
           break;
         case VirtualKeyboardKeyAction.Alpha: //특수기호
+          //특수기호 눌렀다가 다시 한글/영어로 변경할 경우
           setState(() {
-            type = VirtualKeyboardType.Basic;
+            type = _selectedType; //이전에 선택했던 언어로 바뀌게 해준다.
           });
           break;
         case VirtualKeyboardKeyAction.Symbols: //특수기호
@@ -296,16 +291,45 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
           });
           break;
         case VirtualKeyboardKeyAction.local: //언어변경
+
           setState(() {
+            if (isShiftEnabled) {
+              //시프트가 눌린채로 언어변경시 기본(자음/소문자)으로 바꿔준다.
+              isShiftEnabled = false;
+            }
             type = (type == VirtualKeyboardType.local) //영어로 설정됐다면 다시 기본으로
                 ? VirtualKeyboardType.Basic
                 : VirtualKeyboardType.local; //한글이라면 영어로 변경
+            _selectedType = type!;
           });
           break;
         default:
       }
     }
   }
+
+  // void _onKeyPress(VirtualKeyboardKey key) {
+  //   if (key.keyType == VirtualKeyboardKeyType.String) {
+  //     textController.text += (isShiftEnabled ? key.capsText! : key.text!);
+  //   } else if (key.keyType == VirtualKeyboardKeyType.Action) {
+  //     switch (key.action) {
+  //       case VirtualKeyboardKeyAction.Backspace:
+  //         if (textController.text.length == 0) return;
+  //         textController.text =
+  //             textController.text.substring(0, textController.text.length - 1);
+  //         break;
+  //       // case VirtualKeyboardKeyAction.Return:
+  //       //   textController.text += '\n';
+  //       //   break;
+  //       case VirtualKeyboardKeyAction.Space:
+  //         textController.text += key.text!;
+  //         break;
+  //       case VirtualKeyboardKeyAction.Shift:
+  //         break;
+  //       default:
+  //     }
+  //   }
+  // }
 
   /// Creates default UI element for keyboard Action Key.
   Widget _keyboardDefaultActionKey(VirtualKeyboardKey key) {

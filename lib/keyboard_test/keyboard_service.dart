@@ -22,12 +22,24 @@ class _KeyboardServiceTestState extends State<KeyboardServiceTest> {
 
   @override
   void initState() {
-    _controllerText = TextEditingController();
     super.initState();
+    // if (widget.textEditingController != null) {
+    //   input = HangulInput(widget.textEditingController!.text);
+    // } else {
+
+    // }
+    _controllerText = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
+    /*
+      final input = HangulInput('')
+      input.pushCharacter('ㅎ')
+      input.pushCharacter('ㅏ')
+      print(input.text) <- 이런식으로 합치는거 같은데
+    */
+
     return Scaffold(
       appBar: AppBar(
         title: Text('키보드'),
@@ -40,6 +52,7 @@ class _KeyboardServiceTestState extends State<KeyboardServiceTest> {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextField(
                   controller: _controllerText,
+                  autofocus: true,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Your text',
@@ -65,11 +78,12 @@ class _KeyboardServiceTestState extends State<KeyboardServiceTest> {
             Container(
               color: Colors.grey.shade900,
               child: VirtualKeyboard(
-                  height: 400,
-                  type: isNumericMode
-                      ? VirtualKeyboardType.Numeric
-                      : VirtualKeyboardType.Basic,
-                  textController: _controllerText),
+                height: 400,
+                type: isNumericMode
+                    ? VirtualKeyboardType.Numeric
+                    : VirtualKeyboardType.Basic,
+                textController: _controllerText,
+              ),
             )
           ],
         ),

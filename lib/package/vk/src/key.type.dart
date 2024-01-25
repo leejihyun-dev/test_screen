@@ -24,7 +24,7 @@ class VirtualKeyboardKey {
 
 /// Shorthand for creating a simple text key
 class TextUsKey extends VirtualKeyboardKey {
-  //영문은 shift눌렀을 때 대문제 변경 toUpperCase사용해서 올리나보다
+  //영문은 shift눌렀을 때 대문자 변경 toUpperCase사용해서 올리나보다
   TextUsKey(String text, {String? capsText})
       : super(
             text: text,
@@ -33,18 +33,18 @@ class TextUsKey extends VirtualKeyboardKey {
 }
 
 class TextKrKey extends VirtualKeyboardKey {
-  //한글은 쌍자음처리 어떻게 하나
+  //한글일때
   TextKrKey(String text, {String? capsText})
       : super(
             text: text,
-            // capsText: capsText == null ?  text.toString():  capsText,
-            capsText: test(text.toString(), capsText),
+            capsText: replaceHangul(text.toString(), capsText),
             keyType: VirtualKeyboardKeyType.String);
 }
 
-String test(String data, String? capsText) {
+String replaceHangul(String data, String? capsText) {
+  //쌍자음 처리
   if (capsText == null) {
-    String testt = switch (data) {
+    String hangul = switch (data) {
       'ㅂ' => 'ㅃ',
       'ㅈ' => 'ㅉ',
       'ㄷ' => 'ㄸ',
@@ -54,7 +54,7 @@ String test(String data, String? capsText) {
       'ㅔ' => 'ㅖ',
       _ => data,
     };
-    return testt;
+    return hangul;
   } else {
     return capsText;
   }
@@ -66,8 +66,8 @@ class ActionKey extends VirtualKeyboardKey {
       : super(keyType: VirtualKeyboardKeyType.Action, action: action) {
     switch (action) {
       case VirtualKeyboardKeyAction.Space:
-        super.text = ' ';
-        super.capsText = ' ';
+        super.text = '_';
+        super.capsText = '_';
         super.willExpand = true;
         break;
       case VirtualKeyboardKeyAction.Backspace:
