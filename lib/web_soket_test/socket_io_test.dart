@@ -10,7 +10,7 @@ class SocketIoScreen extends StatefulWidget {
 }
 
 class _SocketIoScreenState extends State<SocketIoScreen> {
-  final IO.Socket socket = IO.io('http://localhost:3000',
+  final IO.Socket socket = IO.io('http://192.168.102.56:18080',
       IO.OptionBuilder().setTransports(['websocket']).build());
 
   List<String> receiveMessages = [];

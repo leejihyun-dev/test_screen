@@ -7,9 +7,12 @@ list(APPEND FLUTTER_PLUGIN_LIST
   dart_vlc
   flutter_localization
   pdfx
+  screen_retriever
   syncfusion_pdfviewer_windows
   url_launcher_windows
   video_player_win
+  webview_windows
+  window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

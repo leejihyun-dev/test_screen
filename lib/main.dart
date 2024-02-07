@@ -6,6 +6,7 @@ import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:test_screen_change/3D_list/list_test.dart';
 import 'package:test_screen_change/builder_test/future_builder.dart';
 import 'package:test_screen_change/camera_windows_test/camera_windows.dart';
 import 'package:test_screen_change/camera_windows_test/test_img_select.dart';
@@ -39,12 +40,17 @@ import 'package:test_screen_change/timer_periodic_test/timer_periodic.dart';
 import 'package:test_screen_change/video_Test/video_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:test_screen_change/web_soket_test/socket_io_test.dart';
+import 'package:test_screen_change/web_soket_test/test_two_screen.dart';
 import 'package:test_screen_change/web_soket_test/web_soket_test.dart';
+import 'package:test_screen_change/web_view/web_view.dart';
+import 'package:webview_windows/webview_windows.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() async {
   //runApp(const MyApp());
   // DartVLC.initialize();
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
   runApp(ProviderScope(child: MyApp()));
   // runApp(HistoryTest1());
 }
@@ -84,9 +90,21 @@ class _MyAppState extends ConsumerState<MyApp> {
     //     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown
+        },
+      ),
       home: Scaffold(
+          // appBar: AppBar(
+          //   title: Text('3D 목록 테스트 해보기'),
+          //   centerTitle: true,
+          // ),
           body:
-              (KeyboardServiceTest()) //CameraWindows WebSoketScreen SocketIoScreen TestImgSelectScreen ImgMergeTest KeyboardTest
+              (TestTwoScreen()) //CameraWindows WebSoketScreen SocketIoScreen TestImgSelectScreen ImgMergeTest KeyboardTest KeyboardServiceTest TestTwoScreen
           // body: FutureBuilder(
           //     future: DBHelper().getAllDogs(),
           //     builder: (BuildContext context, AsyncSnapshot<List<Dog>> snapshot) {
