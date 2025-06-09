@@ -2,7 +2,7 @@ name: test_screen_change
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -31,21 +31,21 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  win32: ^5.0.9
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   marquee: ^2.2.3
   flutter_riverpod: ^2.3.6
-  video_player_win: ^2.2.2
-  dart_vlc: ^0.4.0
+  video_player: ^2.9.3
+  video_player_win: ^3.1.1
   scroll_to_id: ^1.5.1
   pdfx: ^2.4.0
   # internet_file: ^1.2.0
   flutter_staggered_grid_view: ^0.6.2
-  flutter_localization: ^0.1.12
-  intl: ^0.18.0
-  syncfusion_flutter_pdfviewer: ^22.1.34
+  # flutter_localization: ^0.1.12
+  intl: ^0.19.0
+  syncfusion_flutter_pdfviewer: ^29.1.39
   flutter_svg: ^2.0.7
   pinch_zoom: ^1.0.0
   zoom_widget: ^2.0.1
@@ -70,6 +70,13 @@ dependencies:
   # virtual_keyboard_2: ^0.0.2
   webview_windows: ^0.3.0
   window_manager: ^0.3.7
+  flutter_drawing_board: ^0.7.0+2
+  screen_retriever: ^0.1.9
+  time_picker_spinner: ^1.0.2
+  table_calendar: ^3.1.3
+  fl_chart: ^0.71.0
+  flutter_slidable: ^4.0.0
+  flutter_localization: ^0.3.2
 
 dev_dependencies:
   flutter_test:
@@ -86,13 +93,17 @@ dev_dependencies:
   json_serializable: ^6.7.1
   freezed: ^2.4.1
   retrofit_generator: ^4.2.0
+  inno_bundle:
+    # path: ./plugins/inno_bundle
+    git:
+      url: https://github.com/sqisoft-media/inno_bundle.git
+      ref: dev
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -159,3 +170,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+generate: true
+
+inno_bundle:
+  id: 5618b2d2-601a-4876-bdc0-f6e0af2c4600
+  #[guid]::NewGuid() <- guid생성하는 명령어 터미널에서 사용가능하다.
+  name: Test Player
+  publisher: SQISoft Inc.
+  #installer_icon: windows/logo/installer.ico
+  languages:
+    - english
+  admin: false
+  url: https://www.eligaspace.com
+  support_url: https://www.eligaspace.com/?v=news
+  updates_url: https://www.eligaspace.com
